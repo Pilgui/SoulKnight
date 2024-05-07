@@ -4,7 +4,10 @@
 
 #include "Window.h"
 
-Window::Window() : window(sf::VideoMode(800,500),"SoulKnight"){
+unsigned const int Window::windowWidth = 800;
+unsigned const int Window::windowHeight = 500;
+
+Window::Window() : window(sf::VideoMode(windowWidth,windowHeight),"SoulKnight"){
     update();
 }
 
@@ -23,7 +26,7 @@ void Window::update() {
             if(event.type == sf::Event::Closed){
                 window.close();
             }
-
+            gameLogic.playerMove();
         }
 
 
@@ -36,8 +39,18 @@ void Window::update() {
 
         window.clear(sf::Color::White);
         //draw
-
+        gameLogic.draw(window);
         //draw
         window.display();
     }
 }
+
+int Window::getWindowWidth() {
+    return windowWidth;
+}
+
+int Window::getWindowHeight() {
+    return windowHeight;
+}
+
+
