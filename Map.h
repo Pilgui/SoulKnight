@@ -11,13 +11,16 @@
 class Map {
 public:
     Map();
-    Map(sf::Texture &texture);
+    Map(sf::Texture &texture, int x, int y, int sizeW, int sizeH);
     void start(std::vector<Map> &mapVector);
     void move(std::vector<Map> &mapVector,Player &player);
     void draw(sf::RenderWindow &window, std::vector<Map> &mapVector);
 private:
     sf::Sprite sprite;
     sf::Texture texture;
+
+    int sizeW;
+    int sizeH;
 };
 
 

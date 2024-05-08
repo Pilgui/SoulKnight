@@ -4,22 +4,43 @@
 
 #include "Map.h"
 #include "Window.h"
+#include "iostream"
 
 Map::Map() {
     if(!texture.loadFromFile("textures\\texture.png")){
         return;
     }
-    sprite.setPosition(Window::getWindowWidth()/2,Window::getWindowHeight()/2);
+//    sprite.setPosition(Window::getWindowWidth()/2,Window::getWindowHeight()/2);
 }
-Map::Map(sf::Texture &texture) {
+Map::Map(sf::Texture &texture, int x, int y, int sizeW, int sizeH) : sizeH(sizeH), sizeW(sizeW) {
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (0,0,500,500));
+    sprite.setTextureRect(sf::IntRect (0,0,sizeW,sizeH));
+    sprite.setPosition(x,y);
 }
 
 void Map::start(std::vector<Map> &mapVector) {
     mapVector.reserve(5);
+    int randomNum = rand()%4 + 1;
 
-    mapVector.emplace_back(Map(texture));
+    mapVector.emplace_back(Map(texture,0,0,600,600));
+
+    switch (randomNum) {
+        case 1:
+            mapVector.emplace_back(Map(texture,mapVector[0].sprite.getPosition().x+600,mapVector[0].sizeH/4,600,300));
+            break;
+        case 2:
+            mapVector.emplace_back(Map(texture,mapVector[0].sprite.getPosition().x-600,mapVector[0].sizeH/4,600,300));
+            break;
+        case 3:
+            mapVector.emplace_back(Map(texture,mapVector[0].sizeW/4,mapVector[0].sprite.getPosition().y+600,300,600));
+            break;
+        case 4:
+            mapVector.emplace_back(Map(texture,mapVector[0].sizeW/4,mapVector[0].sprite.getPosition().y-600,300,600));
+            break;
+    }
+
+    std::cout << mapVector[0].sprite.getPosition().x << " " << mapVector[0].sprite.getPosition().y << std::endl;
+    std::cout << mapVector[1].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
 }
 
 void Map::move(std::vector<Map> &mapVector,Player &player) {
