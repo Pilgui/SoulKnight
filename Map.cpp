@@ -45,31 +45,51 @@ void Map::start(std::vector<Map> &mapVector) {
 
 void Map::move(std::vector<Map> &mapVector,Player &player) {
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
+    if (player.movingRight) {
         for (int i = 0; i < mapVector.size(); ++i) {
-            mapVector[i].sprite.move(-player.getSpeed(),0);
+            mapVector[i].sprite.move(-player.getSpeed(), 0);
         }
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+    if (player.movingLeft) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].sprite.move(player.getSpeed(), 0);
         }
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
+    if (player.movingUp) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].sprite.move(0, player.getSpeed());
         }
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
+    if (player.movingDown) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].sprite.move(0, -player.getSpeed());
         }
     }
+
 }
 
 void Map::draw(sf::RenderWindow &window, std::vector<Map> &mapVector) {
     for (int i = 0; i < mapVector.size(); ++i) {
         window.draw(mapVector[i].sprite);
+    }
+}
+
+void Map::pressedKey(Player &player, sf::Keyboard::Key key, bool isPressed) {
+    switch (key) {
+        case sf::Keyboard::Key::Right:
+            player.movingRight = isPressed;
+            break;
+        case sf::Keyboard::Key::Left:
+            player.movingLeft = isPressed;
+            break;
+        case sf::Keyboard::Key::Up:
+            player.movingUp = isPressed;
+            break;
+        case sf::Keyboard::Key::Down:
+            player.movingDown = isPressed;
+            break;
+        default:
+            break;
     }
 }
 

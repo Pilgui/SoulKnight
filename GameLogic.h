@@ -13,6 +13,7 @@ public:
     GameLogic();
     void playerMove();
     void draw(sf::RenderWindow &window);
+    void pressedKey(sf::Event event);
 private:
     Map map;
     std::vector<Map> mapVector;

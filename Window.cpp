@@ -26,14 +26,14 @@ void Window::update() {
             if(event.type == sf::Event::Closed){
                 window.close();
             }
-            gameLogic.playerMove();
+            gameLogic.pressedKey(event);
         }
 
 
         while (timeSinceLastUpdate > timePerFrame){
             timeSinceLastUpdate -= timePerFrame;
             //actions
-
+            gameLogic.playerMove();
             //actions
         }
 

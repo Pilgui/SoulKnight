@@ -11,6 +11,12 @@ public:
     Player();
     void draw(sf::RenderWindow &window);
     float getSpeed();
+    void setSpeed(float speedF);
+
+    bool movingRight = false;
+    bool movingLeft = false;
+    bool movingUp = false;
+    bool movingDown = false;
 private:
     sf::Sprite sprite;
     sf::Texture texture;

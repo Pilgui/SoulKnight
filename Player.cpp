@@ -6,7 +6,7 @@
 #include "Window.h"
 
 Player::Player() {
-    speed = 3;
+    speed = 5;
 
     if(!texture.loadFromFile("textures\\blue.png")){
         return;
@@ -22,4 +22,8 @@ float Player::getSpeed() {
 
 void Player::draw(sf::RenderWindow &window) {
     window.draw(sprite);
+}
+
+void Player::setSpeed(float speedF) {
+    speedF = speed;
 }
