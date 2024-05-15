@@ -11,7 +11,7 @@ public:
     Player();
     void draw(sf::RenderWindow &window);
     float getSpeed();
-    void setSpeed(float speedF);
+    sf::Sprite getSprite();
 
     bool movingRight = false;
     bool movingLeft = false;

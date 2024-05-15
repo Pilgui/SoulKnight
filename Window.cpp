@@ -4,8 +4,8 @@
 
 #include "Window.h"
 
-unsigned const int Window::windowWidth = 800;
-unsigned const int Window::windowHeight = 500;
+unsigned const int Window::windowWidth = 1000;
+unsigned const int Window::windowHeight = 1000;
 
 Window::Window() : window(sf::VideoMode(windowWidth,windowHeight),"SoulKnight"){
     update();
@@ -33,7 +33,7 @@ void Window::update() {
         while (timeSinceLastUpdate > timePerFrame){
             timeSinceLastUpdate -= timePerFrame;
             //actions
-            gameLogic.playerMove();
+            gameLogic.update();
             //actions
         }
 

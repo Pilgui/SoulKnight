@@ -30,5 +30,7 @@ add_executable(SoulKnight main.cpp
         GameLogic.cpp
         GameLogic.h
         Map.cpp
-        Map.h)
+        Map.h
+        MiniMap.cpp
+        MiniMap.h)
 target_link_libraries(SoulKnight fmt sfml-graphics)

@@ -13,7 +13,7 @@ Player::Player() {
     }
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect (0,0,75,75));
-    sprite.setPosition(Window::getWindowWidth()/2,Window::getWindowHeight()/2);
+    sprite.setPosition(Window::getWindowWidth()/2-75/2,Window::getWindowHeight()/2-75/2);
 }
 
 float Player::getSpeed() {
@@ -24,6 +24,8 @@ void Player::draw(sf::RenderWindow &window) {
     window.draw(sprite);
 }
 
-void Player::setSpeed(float speedF) {
-    speedF = speed;
+sf::Sprite Player::getSprite() {
+    return sprite;
 }
+
+
