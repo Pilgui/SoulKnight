@@ -17,6 +17,12 @@ public:
     bool movingLeft = false;
     bool movingUp = false;
     bool movingDown = false;
+
+    bool isTopBorder = true;
+    bool isBottomBorder = true;
+    bool isLeftBorder = true;
+    bool isRightBorder = true;
+
 private:
     sf::Sprite sprite;
     sf::Texture texture;

@@ -34,6 +34,7 @@ void Map::start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec) {
 
     for (int i = 0; i < 1; ++i) {
         int randomNum = rand()%3 + 1;
+        randomNum = 1;
         switch (randomNum) {
             case 1:
                 mapVector.emplace_back(Map(texture,mapVector[i].sprite.getPosition().x+mapVector[i].sizeW,mapVector[i].sprite.getPosition().y + mapVector[i].sizeH/3,900,300));
@@ -141,30 +142,7 @@ void Map::start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec) {
 //        std::cout << "3 : "<< mapVector[3].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
 }
 
-void Map::move(std::vector<Map> &mapVector,Player &player) {
 
-    if (player.movingRight) {
-        for (int i = 0; i < mapVector.size(); ++i) {
-            mapVector[i].sprite.move(-player.getSpeed(), 0);
-        }
-    }
-    if (player.movingLeft) {
-        for (int i = 0; i < mapVector.size(); ++i) {
-            mapVector[i].sprite.move(player.getSpeed(), 0);
-        }
-    }
-    if (player.movingUp) {
-        for (int i = 0; i < mapVector.size(); ++i) {
-            mapVector[i].sprite.move(0, player.getSpeed());
-        }
-    }
-    if (player.movingDown) {
-        for (int i = 0; i < mapVector.size(); ++i) {
-            mapVector[i].sprite.move(0, -player.getSpeed());
-        }
-    }
-
-}
 
 void Map::draw(sf::RenderWindow &window, std::vector<Map> &mapVector) {
     for (int i = 0; i < mapVector.size(); ++i) {
@@ -172,28 +150,13 @@ void Map::draw(sf::RenderWindow &window, std::vector<Map> &mapVector) {
     }
 }
 
-void Map::pressedKey(Player &player, sf::Keyboard::Key key, bool isPressed) {
-    switch (key) {
-        case sf::Keyboard::Key::Right:
-            player.movingRight = isPressed;
-            break;
-        case sf::Keyboard::Key::Left:
-            player.movingLeft = isPressed;
-            break;
-        case sf::Keyboard::Key::Up:
-            player.movingUp = isPressed;
-            break;
-        case sf::Keyboard::Key::Down:
-            player.movingDown = isPressed;
-            break;
-        default:
-            break;
-    }
+sf::Sprite *Map::getSprite() {
+    return &sprite;
 }
 
-sf::Sprite Map::getSprite() {
-    return sprite;
-}
+
+
+
 
 
 

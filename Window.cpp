@@ -26,7 +26,7 @@ void Window::update() {
             if(event.type == sf::Event::Closed){
                 window.close();
             }
-            gameLogic.pressedKey(event);
+            gameLogic.keyEvent(event);
         }
 
 

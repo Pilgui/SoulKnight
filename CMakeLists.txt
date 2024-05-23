@@ -32,5 +32,11 @@ add_executable(SoulKnight main.cpp
         Map.cpp
         Map.h
         MiniMap.cpp
-        MiniMap.h)
+        MiniMap.h
+        Gun.cpp
+        Gun.h
+        Gun.h
+        Pistol.cpp
+        Pistol.h
+        Pistol.h)
 target_link_libraries(SoulKnight fmt sfml-graphics)
