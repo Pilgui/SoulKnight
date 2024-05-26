@@ -23,9 +23,17 @@ public:
     bool isLeftBorder = true;
     bool isRightBorder = true;
 
+    float getPositionX();
+    float getPositionY();
+
 private:
     sf::Sprite sprite;
     sf::Texture texture;
+
+    int healthPoint;
+    sf::Texture textureHeart;
+    sf::Sprite spriteHeart;
+    sf::Text hpText;
 
     float speed;
 };

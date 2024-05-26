@@ -8,11 +8,13 @@
 #include "Map.h"
 #include "MiniMap.h"
 #include "vector"
+#include "Gun.h"
+
 
 class GameLogic {
 public:
     GameLogic();
-    void update();
+    void update(sf::RenderWindow &window);
     void playerMove();
     void draw(sf::RenderWindow &window);
     void keyEvent(sf::Event &event);
@@ -28,6 +30,7 @@ private:
 
 
     Player player;
+    Gun gun;
 
     sf::Texture greenTexture;
     sf::Texture redTexture;

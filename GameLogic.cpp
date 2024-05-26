@@ -4,7 +4,7 @@
 
 #include "GameLogic.h"
 #include "iostream"
-GameLogic::GameLogic() {
+GameLogic::GameLogic(): gun(Gun(player)) {
     map.start(mapVector,miniMapVec);
     if(!redTexture.loadFromFile("textures\\red.png")){
         return;
@@ -13,10 +13,11 @@ GameLogic::GameLogic() {
         return;
     }
 }
-void GameLogic::update() {
+void GameLogic::update(sf::RenderWindow &window) {
     miniMapUpdate();
     playerMove();
     onCollision();
+    gun.update(window);
 }
 
 void GameLogic::playerMove()
@@ -47,6 +48,7 @@ void GameLogic::draw(sf::RenderWindow &window) {
     map.draw(window,mapVector);
     miniMap.draw(window,miniMapVec);
     player.draw(window);
+    gun.draw(window);
 }
 
 void GameLogic::keyEvent(sf::Event &event) {
@@ -56,6 +58,7 @@ void GameLogic::keyEvent(sf::Event &event) {
     if (event.type == sf::Event::KeyReleased) {
         pressedKey(event.key.code, false);
     }
+    gun.shoot();
 }
 void GameLogic::pressedKey(sf::Keyboard::Key &key, bool isPressed) {
     switch (key) {
