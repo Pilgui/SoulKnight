@@ -16,6 +16,17 @@ public:
     void start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec);
     void draw(sf::RenderWindow &window, std::vector<Map> &mapVector);
     sf::Sprite *getSprite();
+
+    enum typeRoom{
+        ENEMY,
+        SHOP,
+        SPAWN,
+        TUNNEL
+    };
+    typeRoom typeRoom;
+
+
+
 private:
     sf::Sprite sprite;
     sf::Texture texture;
@@ -24,6 +35,9 @@ private:
     MiniMap miniMap;
     int sizeW;
     int sizeH;
+
+
+
 };
 
 

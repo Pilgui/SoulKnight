@@ -28,6 +28,8 @@ void Map::start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec) {
 
     mapVector.emplace_back(Map(texture,Window::getWindowWidth()/2-450,Window::getWindowHeight()/2-450,900,900));
     miniMapVec.emplace_back(MiniMap(1,textureSpawn,miniMap.getBackgroundWidth()/10,miniMap.getBackgroundHeight()/3,30,30));
+
+    mapVector[0].typeRoom = Map::typeRoom::SPAWN;
     std::cout << "0 : " << mapVector[0].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
     fmt::println("{}",miniMap.getBackgroundHeight());
     char way;
@@ -108,38 +110,17 @@ void Map::start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec) {
             default:
                 break;
         }
+    }
+    for (int i = 1; i < mapVector.size(); ++i) {
+        if(i != 0 && i % 2 == 0){
+            mapVector[i].typeRoom = Map::typeRoom::ENEMY;
+        }
+        if(i == 1 || i % 2 != 0){
+            mapVector[i].typeRoom = Map::typeRoom::TUNNEL;
+        }
 
-
-//        switch (randomNum) {
-//            case 1:
-//            case 2:
-//            case 3:
-//            case 4:
-//        }
-//        switch (randomNum) {
-//            case 1:
-//                mapVector.emplace_back(Map(texture,mapVector[i+2].sprite.getPosition().x+mapVector[i+2].sizeW,mapVector[i+2].sizeH/3,900,300));
-//                mapVector.emplace_back(Map(texture,mapVector[i+3].sprite.getPosition().x+mapVector[i+3].sizeW,mapVector[i+3].sizeH-300,900,900));
-//                break;
-//            case 2:
-//                mapVector.emplace_back(Map(texture,mapVector[i+2].sprite.getPosition().x-mapVector[i+2].sizeW,mapVector[i+2].sizeH/3,900,300 ));
-//                mapVector.emplace_back(Map(texture,mapVector[i+3].sprite.getPosition().x-mapVector[i+3].sizeW,mapVector[i+3].sizeH-300,900,900));
-//                break;
-//            case 3:
-//                mapVector.emplace_back(Map(texture,mapVector[i+2].sizeW/3,mapVector[i+2].sprite.getPosition().y+mapVector[i+2].sizeH,300,900));
-//                mapVector.emplace_back(Map(texture,mapVector[i+3].sizeW-300,mapVector[i+3].sprite.getPosition().y+mapVector[i+3].sizeH,900,900));
-//                break;
-//            case 4:
-//                mapVector.emplace_back(Map(texture,mapVector[i+2].sizeW/3,mapVector[i+2].sprite.getPosition().y-mapVector[i+2].sizeH,300,900));
-//                mapVector.emplace_back(Map(texture,mapVector[i+3].sizeW-300,mapVector[i+3].sprite.getPosition().y-mapVector[i+3].sizeH,900,900));
-//                break;
-//        }
     }
 
-//    std::cout << "1 : "<< mapVector[1].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
-//    std::cout << "2 : "<< mapVector[2].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
-//        std::cout << "4 : "<< mapVector[4].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
-//        std::cout << "3 : "<< mapVector[3].sprite.getPosition().x << " " << mapVector[1].sprite.getPosition().y << std::endl;
 }
 
 

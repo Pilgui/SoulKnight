@@ -65,3 +65,7 @@ sf::Vector2f Gun::getEndPos() {
     endPos += sprite.getPosition() - sprite.getOrigin();
     return endPos;
 }
+
+std::vector<Bullet> *Gun::getBulletVec() {
+    return &bulletVec;
+}

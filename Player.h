@@ -10,8 +10,10 @@ class Player {
 public:
     Player();
     void draw(sf::RenderWindow &window);
+    void update();
+
     float getSpeed();
-    sf::Sprite getSprite();
+    sf::Sprite *getSprite();
 
     bool movingRight = false;
     bool movingLeft = false;
@@ -26,14 +28,29 @@ public:
     float getPositionX();
     float getPositionY();
 
+    void setHP(int hp);
+    int getHP();
+
+    void setCoinScore(int cs);
+    int getCoinScore();
+
 private:
     sf::Sprite sprite;
     sf::Texture texture;
 
     int healthPoint;
+    int coinScore = 0;
+
     sf::Texture textureHeart;
     sf::Sprite spriteHeart;
+
     sf::Text hpText;
+    sf::Font font;
+
+    sf::Sprite coinSprite;
+    sf::Texture coinTexture;
+    sf::Text coinText;
+
 
     float speed;
 };

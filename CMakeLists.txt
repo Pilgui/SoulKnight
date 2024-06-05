@@ -40,5 +40,9 @@ add_executable(SoulKnight main.cpp
         Pistol.h
         Pistol.h
         Bullet.cpp
-        Bullet.h)
+        Bullet.h
+        Enemy.cpp
+        Enemy.h
+        Coin.cpp
+        Coin.h)
 target_link_libraries(SoulKnight fmt sfml-graphics)

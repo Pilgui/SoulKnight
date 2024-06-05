@@ -21,19 +21,41 @@ Player::Player() : healthPoint(10) {
     spriteHeart.setTexture(textureHeart);
     spriteHeart.setPosition(Window::getWindowWidth()-100,0);
 
+    if(!font.loadFromFile("fonts\\font.ttf")){
+        return;
+    }
+    hpText.setFont(font);
+    hpText.setFillColor(sf::Color::Black);
+    hpText.setPosition(Window::getWindowWidth()-50,0);
+
+    if(!coinTexture.loadFromFile("textures\\coinIcon.png")){
+        return;
+    }
+    coinSprite.setTexture(coinTexture);
+    coinSprite.setPosition(Window::getWindowWidth()-100,45);
+
+    coinText.setFont(font);
+    coinText.setFillColor(sf::Color::Black);
+    coinText.setPosition(Window::getWindowWidth()-50,45);
+
 }
 
-float Player::getSpeed() {
-    return speed;
+
+void Player::update() {
+    hpText.setString(std::to_string(healthPoint));
+    coinText.setString(std::to_string(coinScore));
 }
 
 void Player::draw(sf::RenderWindow &window) {
     window.draw(sprite);
     window.draw(spriteHeart);
+    window.draw(hpText);
+    window.draw(coinSprite);
+    window.draw(coinText);
 }
 
-sf::Sprite Player::getSprite() {
-    return sprite;
+sf::Sprite *Player::getSprite() {
+    return &sprite;
 }
 
 float Player::getPositionX() {
@@ -43,5 +65,25 @@ float Player::getPositionX() {
 float Player::getPositionY() {
     return sprite.getPosition().y;
 }
+float Player::getSpeed() {
+    return speed;
+}
+
+void Player::setHP(int hp) {
+    healthPoint = hp;
+}
+
+int Player::getHP() {
+    return healthPoint;
+}
+
+void Player::setCoinScore(int cs) {
+    coinScore = cs;
+}
+
+int Player::getCoinScore() {
+    return coinScore;
+}
+
 
 

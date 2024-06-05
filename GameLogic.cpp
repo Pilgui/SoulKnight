@@ -13,11 +13,14 @@ GameLogic::GameLogic(): gun(Gun(player)) {
         return;
     }
 }
-void GameLogic::update(sf::RenderWindow &window) {
+void GameLogic::update(sf::RenderWindow &window){
     miniMapUpdate();
     playerMove();
+    spawnEnemies();
     onCollision();
+    player.update();
     gun.update(window);
+    enemy.update(enemyVec,player,coinVec,scoreEnemy);
 }
 
 void GameLogic::playerMove()
@@ -26,20 +29,42 @@ void GameLogic::playerMove()
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].getSprite()->move(-player.getSpeed(), 0);
         }
+        for (int i = 0; i < enemyVec.size(); ++i) {
+            enemyVec[i].getSprite()->move(-player.getSpeed(),0);
+        }
+        for (int i = 0; i < coinVec.size(); ++i) {
+            coinVec[i].getSprite()->move(-player.getSpeed(),0);
+        }
     }
     if (player.movingLeft && player.isLeftBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].getSprite()->move(player.getSpeed(), 0);
         }
+        for (int i = 0; i < enemyVec.size(); ++i) {
+            enemyVec[i].getSprite()->move(player.getSpeed(),0);
+        }
+        for (int i = 0; i < coinVec.size(); ++i) {
+            coinVec[i].getSprite()->move(player.getSpeed(),0);
+        }
     }
     if (player.movingUp && player.isTopBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].getSprite()->move(0, player.getSpeed());
+        }for (int i = 0; i < enemyVec.size(); ++i) {
+            enemyVec[i].getSprite()->move(0,player.getSpeed());
+        }
+        for (int i = 0; i < coinVec.size(); ++i) {
+            coinVec[i].getSprite()->move(0,player.getSpeed());
         }
     }
     if (player.movingDown && player.isBottomBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].getSprite()->move(0, -player.getSpeed());
+        }for (int i = 0; i < enemyVec.size(); ++i) {
+            enemyVec[i].getSprite()->move(0,-player.getSpeed());
+        }
+        for (int i = 0; i < coinVec.size(); ++i) {
+            coinVec[i].getSprite()->move(0,-player.getSpeed());
         }
     }
 }
@@ -49,6 +74,8 @@ void GameLogic::draw(sf::RenderWindow &window) {
     miniMap.draw(window,miniMapVec);
     player.draw(window);
     gun.draw(window);
+    enemy.draw(window,enemyVec);
+    coin.draw(window,coinVec);
 }
 
 void GameLogic::keyEvent(sf::Event &event) {
@@ -81,7 +108,7 @@ void GameLogic::pressedKey(sf::Keyboard::Key &key, bool isPressed) {
 
 void GameLogic::onCollision() {
     for (int i = 0; i < mapVector.size(); i++) {
-        sf::FloatRect playerBounds = player.getSprite().getGlobalBounds();
+        sf::FloatRect playerBounds = player.getSprite()->getGlobalBounds();
         sf::FloatRect mapBounds = mapVector[i].getSprite()->getGlobalBounds();
         sf::FloatRect tunnelMapBounds = mapVector[i+1].getSprite()->getGlobalBounds();
 
@@ -116,11 +143,34 @@ void GameLogic::onCollision() {
             }
         }
     }
+    elapsedTime += clock.restart();
+    for (int i = 0; i < enemyVec.size(); ++i) {
+        if(player.getSprite()->getGlobalBounds().intersects(enemyVec[i].getSprite()->getGlobalBounds()) &&
+            elapsedTime > sf::seconds(1)){
+            player.setHP(player.getHP()-1);
+            elapsedTime = sf::Time::Zero;
+        }
+        for (int j = 0; j < gun.getBulletVec()->size(); ++j) {
+            if (enemyVec[i].getSprite()->getGlobalBounds().intersects(gun.getBulletVec()->at(j).getSprite()->getGlobalBounds())) {
+                auto bulletIter = gun.getBulletVec()->begin() + j;
+                gun.getBulletVec()->erase(bulletIter);
+                enemyVec[i].setHP(enemyVec[i].getHP() - 1);
+                break;
+            }
+        }
+    }
+    for (int i = 0; i < coinVec.size(); ++i) {
+        if (player.getSprite()->getGlobalBounds().intersects(coinVec[i].getSprite()->getGlobalBounds())) {
+            auto iter = coinVec.begin() + i;
+            coinVec.erase(iter);
+            player.setCoinScore(player.getCoinScore()+1);
+        }
+    }
 }
 
 void GameLogic::miniMapUpdate() {
     for (int i = 0; i < mapVector.size(); ++i) {
-        bool isIntersecting = player.getSprite().getGlobalBounds().intersects(mapVector[i].getSprite()->getGlobalBounds());
+        bool isIntersecting = player.getSprite()->getGlobalBounds().intersects(mapVector[i].getSprite()->getGlobalBounds());
 
         if (isIntersecting) {
             if (miniMapVec[i].getTypeRoom() == 1) {
@@ -131,6 +181,33 @@ void GameLogic::miniMapUpdate() {
         } else {
             if (miniMapVec[i].getTypeRoom() == 1) {
                 miniMapVec[i].getSpite()->setTexture(greenTexture);
+            }
+        }
+    }
+}
+
+void GameLogic::spawnEnemies() {
+    enemyVec.reserve(3);
+    for (int i = 0; i < mapVector.size(); ++i) {
+        if(player.getSprite()->getGlobalBounds().intersects(mapVector[i].getSprite()->getGlobalBounds())){
+            if(mapVector[i].typeRoom == map.ENEMY){
+                inEnemyRoom = true;
+            }else if(mapVector[i].typeRoom == map.TUNNEL || mapVector[i].typeRoom == map.SPAWN){
+                scoreEnemy = 0;
+                inEnemyRoom = false;
+            }
+        }
+    }
+
+    while (enemyVec.size() < 3 && inEnemyRoom && scoreEnemy <= 7) {
+        for (int i = 0; i < mapVector.size(); ++i) {
+            if (mapVector[i].typeRoom == map.ENEMY &&
+                player.getSprite()->getGlobalBounds().intersects(mapVector[i].getSprite()->getGlobalBounds())) {
+                int randNumX = (rand() % 850) + 1;
+                int randNumY = (rand() % 850) + 1;
+                enemyVec.emplace_back(redTexture, mapVector[i].getSprite()->getPosition().x + randNumX,
+                                          mapVector[i].getSprite()->getPosition().y + randNumY);
+//                std::cout << i << "ENEMY" << std::endl;
             }
         }
     }

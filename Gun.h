@@ -15,6 +15,7 @@ public:
     void update(sf::RenderWindow &window);
     void shoot();
     sf::Vector2f getEndPos();
+    std::vector<Bullet> *getBulletVec();
 private:
     sf::Clock clock;
     sf::Time lastShootTime = sf::Time::Zero;

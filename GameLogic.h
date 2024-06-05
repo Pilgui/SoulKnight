@@ -9,6 +9,7 @@
 #include "MiniMap.h"
 #include "vector"
 #include "Gun.h"
+#include "Enemy.h"
 
 
 class GameLogic {
@@ -21,6 +22,7 @@ public:
     void pressedKey(sf::Keyboard::Key &key, bool isPressed);
     void onCollision();
     void miniMapUpdate();
+    void spawnEnemies();
 private:
     Map map;
     std::vector<Map> mapVector;
@@ -28,13 +30,25 @@ private:
     MiniMap miniMap;
     std::vector<MiniMap> miniMapVec;
 
+    Enemy enemy;
+    std::vector<Enemy> enemyVec;
 
     Player player;
     Gun gun;
 
+    Coin coin;
+    std::vector<Coin> coinVec;
+
     sf::Texture greenTexture;
     sf::Texture redTexture;
 
+
+    bool inEnemyRoom = false;
+
+    sf::Clock clock;
+    sf::Time elapsedTime = sf::Time::Zero;
+
+    int scoreEnemy = 0;
 };
 
 
