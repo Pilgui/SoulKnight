@@ -8,13 +8,16 @@
 #include "iostream"
 
 Gun::Gun(Player &player) {
-    if(!texture.loadFromFile("textures\\red.png")){
+    if(!texture.loadFromFile("textures\\gun.png")){
+        return;
+    }
+    if(!texture2.loadFromFile("textures\\gun2.png")){
         return;
     }
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (0,0,40,15));
-    sprite.setPosition(player.getPositionX()+40,player.getPositionY()+30);
 
+    sprite.setPosition(player.getPositionX()+23,player.getPositionY()+65);
+    sprite.setOrigin(0, sprite.getLocalBounds().height);
     bulletVec.reserve(3);
 }
 
@@ -33,6 +36,16 @@ void Gun::update(sf::RenderWindow &window) {
     angle = std::atan2(dy,dx) * 180 / M_PI;
 
     sprite.setRotation(angle);
+
+    if (dx < 0) {
+        sprite.setTexture(texture2);
+        sprite.setOrigin(sprite.getLocalBounds().width, sprite.getLocalBounds().height);
+        sprite.setRotation(angle + 180); // Корректируем угол поворота
+    } else {
+        sprite.setTexture(texture);
+        sprite.setOrigin(0, sprite.getLocalBounds().height);
+        sprite.setRotation(angle);
+    }
 
     if (isShooting) {
         bullet.update(bulletVec);
@@ -60,8 +73,15 @@ void Gun::shoot() {
 
 sf::Vector2f Gun::getEndPos() {
     sf::Transform transform;
-    transform.rotate(angle, sprite.getOrigin());
-    sf::Vector2f endPos = transform.transformPoint(sprite.getOrigin().x + sprite.getLocalBounds().width, sprite.getOrigin().y + sprite.getLocalBounds().height / 2);
+    transform.rotate(sprite.getRotation(), sprite.getOrigin());
+    sf::Vector2f endPos;
+
+    if (sprite.getTexture() == &texture2) {
+        endPos = transform.transformPoint(sprite.getOrigin().x - sprite.getLocalBounds().width, sprite.getLocalBounds().height / 2);
+    } else {
+        endPos = transform.transformPoint(sprite.getLocalBounds().width, sprite.getLocalBounds().height / 2);
+    }
+
     endPos += sprite.getPosition() - sprite.getOrigin();
     return endPos;
 }

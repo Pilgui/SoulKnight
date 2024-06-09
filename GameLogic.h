@@ -5,11 +5,13 @@
 #ifndef SOULKNIGHT_GAMELOGIC_H
 #define SOULKNIGHT_GAMELOGIC_H
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Map.h"
 #include "MiniMap.h"
 #include "vector"
 #include "Gun.h"
 #include "Enemy.h"
+#include "Shop.h"
 
 
 class GameLogic {
@@ -32,6 +34,8 @@ private:
 
     Enemy enemy;
     std::vector<Enemy> enemyVec;
+    sf::Texture enemyTexture;
+    sf::Texture enemyDamage;
 
     Player player;
     Gun gun;
@@ -42,11 +46,16 @@ private:
     sf::Texture greenTexture;
     sf::Texture redTexture;
 
+    Shop shop;
+
 
     bool inEnemyRoom = false;
 
     sf::Clock clock;
     sf::Time elapsedTime = sf::Time::Zero;
+
+    sf::Clock enemyAnimClock;
+    sf::Time enemyAnimelapsedTime = sf::Time::Zero;
 
     int scoreEnemy = 0;
 };

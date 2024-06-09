@@ -34,9 +34,21 @@ public:
     void setCoinScore(int cs);
     int getCoinScore();
 
+    void setDamage(int d);
+    int getDamage();
+
+    void getDamaged();
+    void resetTexture();
+
+    sf::Clock damageClock;
+
 private:
     sf::Sprite sprite;
-    sf::Texture texture;
+    sf::Texture texture1;
+    sf::Texture texture2;
+
+    sf::Texture plDamagedTexture1;
+    sf::Texture plDamagedTexture2;
 
     int healthPoint;
     int coinScore = 0;
@@ -51,8 +63,15 @@ private:
     sf::Texture coinTexture;
     sf::Text coinText;
 
+    sf::Sprite swordSprite;
+    sf::Texture swordTexture;
+    sf::Text swordText;
+
 
     float speed;
+    int damage;
+
+    bool isDamaged = false;
 };
 
 

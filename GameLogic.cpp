@@ -4,12 +4,20 @@
 
 #include "GameLogic.h"
 #include "iostream"
-GameLogic::GameLogic(): gun(Gun(player)) {
+
+GameLogic::GameLogic(): gun(Gun(player)){
     map.start(mapVector,miniMapVec);
-    if(!redTexture.loadFromFile("textures\\red.png")){
+    shop.start(mapVector);
+    if(!redTexture.loadFromFile("textures\\minimap2.png")){
         return;
     }
-    if(!greenTexture.loadFromFile("textures\\texture.png")){
+    if(!greenTexture.loadFromFile("textures\\minimap1.png")){
+        return;
+    }
+    if(!enemyTexture.loadFromFile("textures\\enemy.png")){
+        return;
+    }
+    if(!enemyDamage.loadFromFile("textures\\enemyDamage.png")){
         return;
     }
 }
@@ -21,10 +29,15 @@ void GameLogic::update(sf::RenderWindow &window){
     player.update();
     gun.update(window);
     enemy.update(enemyVec,player,coinVec,scoreEnemy);
+    shop.update(mapVector,window,player);
+    for (auto &e : enemyVec) {
+        e.updateState();
+    }
 }
 
 void GameLogic::playerMove()
 {
+    map.backGroundMoves(player);
     if (player.movingRight && player.isRightBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
             mapVector[i].getSprite()->move(-player.getSpeed(), 0);
@@ -35,6 +48,10 @@ void GameLogic::playerMove()
         for (int i = 0; i < coinVec.size(); ++i) {
             coinVec[i].getSprite()->move(-player.getSpeed(),0);
         }
+        for (int i = 0; i < gun.getBulletVec()->size(); ++i) {
+            gun.getBulletVec()->at(i).getSprite()->move(-player.getSpeed(), 0);
+        }
+        shop.getSprite()->move(-player.getSpeed(),0);
     }
     if (player.movingLeft && player.isLeftBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
@@ -46,6 +63,10 @@ void GameLogic::playerMove()
         for (int i = 0; i < coinVec.size(); ++i) {
             coinVec[i].getSprite()->move(player.getSpeed(),0);
         }
+        for (int i = 0; i < gun.getBulletVec()->size(); ++i) {
+            gun.getBulletVec()->at(i).getSprite()->move(player.getSpeed(), 0);
+        }
+        shop.getSprite()->move(player.getSpeed(),0);
     }
     if (player.movingUp && player.isTopBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
@@ -56,6 +77,10 @@ void GameLogic::playerMove()
         for (int i = 0; i < coinVec.size(); ++i) {
             coinVec[i].getSprite()->move(0,player.getSpeed());
         }
+        for (int i = 0; i < gun.getBulletVec()->size(); ++i) {
+            gun.getBulletVec()->at(i).getSprite()->move(0, player.getSpeed());
+        }
+        shop.getSprite()->move(0,player.getSpeed());
     }
     if (player.movingDown && player.isBottomBorder) {
         for (int i = 0; i < mapVector.size(); ++i) {
@@ -66,16 +91,21 @@ void GameLogic::playerMove()
         for (int i = 0; i < coinVec.size(); ++i) {
             coinVec[i].getSprite()->move(0,-player.getSpeed());
         }
+        for (int i = 0; i < gun.getBulletVec()->size(); ++i) {
+            gun.getBulletVec()->at(i).getSprite()->move(0, -player.getSpeed());
+        }
+        shop.getSprite()->move(0,-player.getSpeed());
     }
 }
 
 void GameLogic::draw(sf::RenderWindow &window) {
     map.draw(window,mapVector);
-    miniMap.draw(window,miniMapVec);
-    player.draw(window);
-    gun.draw(window);
     enemy.draw(window,enemyVec);
     coin.draw(window,coinVec);
+    player.draw(window);
+    gun.draw(window);
+    shop.draw(window);
+    miniMap.draw(window,miniMapVec);
 }
 
 void GameLogic::keyEvent(sf::Event &event) {
@@ -122,19 +152,19 @@ void GameLogic::onCollision() {
             float tunnelBottom = tunnelMapBounds.top + tunnelMapBounds.height;
 
             if (playerBounds.left < mapBounds.left && playerRight > mapBounds.left) {
-                player.isLeftBorder = false;
+//                player.isLeftBorder = false;
             } else if ((playerRight > mapRight && playerBounds.left < mapRight)) {
                 if((playerBounds.left > tunnelMapBounds.left && playerRight < tunnelMapBounds.left) &&
                         (playerBottom > tunnelBottom && playerBounds.top < tunnelMapBounds.top)){
                     std::cout << "RRRR" << std::endl;
-                    player.isRightBorder = false;
+//                    player.isRightBorder = false;
                 }
             } else if(false){
 
             } else if (playerBounds.top < mapBounds.top && playerBottom > mapBounds.top) {
-                player.isTopBorder = false;
+//                player.isTopBorder = false;
             } else if (playerBottom > mapBottom && playerBounds.top < mapBottom) {
-                player.isBottomBorder = false;
+//                player.isBottomBorder = false;
             }else {
                 player.isBottomBorder = true;
                 player.isTopBorder = true;
@@ -148,14 +178,16 @@ void GameLogic::onCollision() {
         if(player.getSprite()->getGlobalBounds().intersects(enemyVec[i].getSprite()->getGlobalBounds()) &&
             elapsedTime > sf::seconds(1)){
             player.setHP(player.getHP()-1);
+            player.getDamaged();
             elapsedTime = sf::Time::Zero;
         }
         for (int j = 0; j < gun.getBulletVec()->size(); ++j) {
             if (enemyVec[i].getSprite()->getGlobalBounds().intersects(gun.getBulletVec()->at(j).getSprite()->getGlobalBounds())) {
-                auto bulletIter = gun.getBulletVec()->begin() + j;
-                gun.getBulletVec()->erase(bulletIter);
-                enemyVec[i].setHP(enemyVec[i].getHP() - 1);
-                break;
+                enemyVec[i].getSprite()->setTexture(enemyDamage);
+                enemyVec[i].setHP(enemyVec[i].getHP() - player.getDamage());
+                enemyVec[i].isDamaged = true;
+                enemyVec[i].damageClock.restart();
+                gun.getBulletVec()->erase(gun.getBulletVec()->begin() + j);
             }
         }
     }
@@ -205,7 +237,7 @@ void GameLogic::spawnEnemies() {
                 player.getSprite()->getGlobalBounds().intersects(mapVector[i].getSprite()->getGlobalBounds())) {
                 int randNumX = (rand() % 850) + 1;
                 int randNumY = (rand() % 850) + 1;
-                enemyVec.emplace_back(redTexture, mapVector[i].getSprite()->getPosition().x + randNumX,
+                enemyVec.emplace_back(enemyTexture, mapVector[i].getSprite()->getPosition().x + randNumX,
                                           mapVector[i].getSprite()->getPosition().y + randNumY);
 //                std::cout << i << "ENEMY" << std::endl;
             }

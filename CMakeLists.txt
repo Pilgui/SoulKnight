@@ -36,13 +36,14 @@ add_executable(SoulKnight main.cpp
         Gun.cpp
         Gun.h
         Gun.h
-        Pistol.cpp
-        Pistol.h
-        Pistol.h
         Bullet.cpp
         Bullet.h
         Enemy.cpp
         Enemy.h
         Coin.cpp
-        Coin.h)
+        Coin.h
+        Shop.cpp
+        Shop.h
+        GameState/MenuState.cpp
+        GameState/MenuState.h)
 target_link_libraries(SoulKnight fmt sfml-graphics)

@@ -16,6 +16,7 @@ public:
     void start(std::vector<Map> &mapVector,std::vector<MiniMap> &miniMapVec);
     void draw(sf::RenderWindow &window, std::vector<Map> &mapVector);
     sf::Sprite *getSprite();
+    void backGroundMoves(Player &player);
 
     enum typeRoom{
         ENEMY,
@@ -25,17 +26,22 @@ public:
     };
     typeRoom typeRoom;
 
-
-
 private:
     sf::Sprite sprite;
-    sf::Texture texture;
-    sf::Texture textureSpawn;
+    sf::Texture mapTexture;
+    sf::Texture tunnelTexture1;
+    sf::Texture tunnelTexture2;
+    sf::Texture miniMapTexture;
+    sf::Texture miniTunnelTexture1;
+    sf::Texture miniTunnelTexture2;
 
     MiniMap miniMap;
     int sizeW;
     int sizeH;
 
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
+    std::vector<sf::Sprite> backgroundVec;
 
 
 };

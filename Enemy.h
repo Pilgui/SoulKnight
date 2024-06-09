@@ -20,6 +20,11 @@ public:
     sf::Texture *getTexture();
     int getHP();
     void setHP(int HP);
+    void setDamageTexture(sf::Texture &texture);
+    void setNormalTexture(sf::Texture &texture);
+    void updateState();
+    sf::Clock damageClock;
+    bool isDamaged = false;
 private:
     sf::Clock clock;
     sf::Time elapsedTime = sf::Time::Zero;
@@ -34,6 +39,11 @@ private:
     float enemySpeed = 5;
     bool isDead = false;
     char way;
+
+
+    sf::Texture *normalTexture;
+
+    float damageTime = 0.1f;
 };
 
 

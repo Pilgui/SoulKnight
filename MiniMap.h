@@ -28,8 +28,8 @@ private:
     int sizeW;
     int sizeH;
 
-    const int sizeBackgroundW = 400;
-    const int sizeBackgroundH = 250;
+    const int sizeBackgroundW = 250;
+    const int sizeBackgroundH = 200;
 
     int typeRoom;
 };

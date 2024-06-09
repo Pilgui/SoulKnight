@@ -4,16 +4,27 @@
 
 #include "Player.h"
 #include "Window.h"
+#include "iostream"
 
 Player::Player() : healthPoint(10) {
     speed = 5;
+    damage = 1;
 
-    if(!texture.loadFromFile("textures\\blue.png")){
+    if(!texture1.loadFromFile("textures\\player1.png")){
         return;
     }
-    sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (0,0,75,75));
-    sprite.setPosition(Window::getWindowWidth()/2-75,Window::getWindowHeight()/2-75);
+    if(!texture2.loadFromFile("textures\\player2.png")){
+        return;
+    }
+    if(!plDamagedTexture1.loadFromFile("textures\\playerDamaged1.png")){
+        return;
+    }
+    if(!plDamagedTexture2.loadFromFile("textures\\playerDamaged2.png")){
+        return;
+    }
+    sprite.setTexture(texture1);
+//    sprite.setTextureRect(sf::IntRect (0,0,75,75));
+    sprite.setPosition(Window::getWindowWidth()/2-24,Window::getWindowHeight()/2-75/2);
 
     if(!textureHeart.loadFromFile("textures\\heart.png")){
         return;
@@ -38,12 +49,34 @@ Player::Player() : healthPoint(10) {
     coinText.setFillColor(sf::Color::Black);
     coinText.setPosition(Window::getWindowWidth()-50,45);
 
+    if(!swordTexture.loadFromFile("textures\\swordIcon.png")){
+        return;
+    }
+    swordSprite.setTexture(swordTexture);
+    swordSprite.setPosition(Window::getWindowWidth()-100,90);
+
+    swordText.setFont(font);
+    swordText.setFillColor(sf::Color::Black);
+    swordText.setPosition(Window::getWindowWidth()-50,90);
+
 }
 
 
 void Player::update() {
     hpText.setString(std::to_string(healthPoint));
     coinText.setString(std::to_string(coinScore));
+    swordText.setString(std::to_string(damage));
+    if (isDamaged && damageClock.getElapsedTime().asSeconds() > 0.1) {
+        resetTexture();
+    }
+//    std::cout << isDamaged;
+    if (!isDamaged) {
+        if (movingRight) {
+            sprite.setTexture(texture1);
+        } else if (movingLeft) {
+            sprite.setTexture(texture2);
+        }
+    }
 }
 
 void Player::draw(sf::RenderWindow &window) {
@@ -52,6 +85,8 @@ void Player::draw(sf::RenderWindow &window) {
     window.draw(hpText);
     window.draw(coinSprite);
     window.draw(coinText);
+    window.draw(swordSprite);
+    window.draw(swordText);
 }
 
 sf::Sprite *Player::getSprite() {
@@ -83,6 +118,33 @@ void Player::setCoinScore(int cs) {
 
 int Player::getCoinScore() {
     return coinScore;
+}
+
+void Player::setDamage(int d) {
+    damage = d;
+}
+
+int Player::getDamage() {
+    return damage;
+}
+
+void Player::getDamaged() {
+    if (sprite.getTexture() == &texture1) {
+        sprite.setTexture(plDamagedTexture1);
+    } else if (sprite.getTexture() == &texture2) {
+        sprite.setTexture(plDamagedTexture2);
+    }
+    isDamaged = true;
+    damageClock.restart();
+}
+
+void Player::resetTexture() {
+    if (movingRight) {
+        sprite.setTexture(texture1);
+    } else if (movingLeft) {
+        sprite.setTexture(texture2);
+    }
+    isDamaged = false;
 }
 
 

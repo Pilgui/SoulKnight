@@ -18,7 +18,7 @@ public:
 private:
     sf::CircleShape circleShape;
 
-    float speed = 5;
+    float speed = 7;
     float velocityX;
     float velocityY;
 

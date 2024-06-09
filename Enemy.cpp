@@ -8,7 +8,7 @@
 
 
 Enemy::Enemy() {
-    if(!texture.loadFromFile("textures\\red.png")){
+    if(!texture.loadFromFile("textures\\enemy.png")){
         return;
     }
     if(!coinTexture.loadFromFile("textures\\coin.png")){
@@ -16,13 +16,13 @@ Enemy::Enemy() {
     }
 
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (0,0,50,50));
+    normalTexture = &texture;
 }
 
 Enemy::Enemy(sf::Texture &texture,int x, int y) : healthPoint(3){
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (0,0,50,50));
     sprite.setPosition(x,y);
+    normalTexture = &texture;
 }
 
 void Enemy::draw(sf::RenderWindow &window, std::vector<Enemy> &enemyVec) {
@@ -68,42 +68,6 @@ void Enemy::update(std::vector<Enemy> &enemyVec,Player &player,std::vector<Coin>
             enemyVec.erase(iter);
         }
     }
-
-//    elapsedTime += clock.restart();
-//    int randNum;
-    /*if (elapsedTime > sf::seconds(2)) {
-        enemySpeed *= -1;
-        elapsedTime -= sf::seconds(2);
-        randNum = (rand()%3)+1;
-        std::cout << "0" << std::endl;
-    }
-
-
-    for (int i = 0; i < enemyVec.size(); i++) {
-        switch (randNum) {
-            case 1:
-                enemyVec[i].way = 'H';
-                break;
-            case 2:
-                enemyVec[i].way = 'V';
-                break;
-            case 3:
-                enemyVec[i].way = 'D';
-                break;
-        }
-    }
-
-    for (int i = 0; i < enemyVec.size(); ++i) {
-        if(enemyVec[i].way == 'H'){
-            enemyVec[i].sprite.move(enemySpeed,0);
-        }else if(enemyVec[i].way == 'V'){
-            enemyVec[i].sprite.move(0,enemySpeed);
-        }else if (enemyVec[i].way == 'D'){
-            enemyVec[i].sprite.move(enemySpeed,enemySpeed);
-        }
-    }
-*/
-
 }
 
 sf::Texture *Enemy::getTexture() {
@@ -116,5 +80,14 @@ int Enemy::getHP() {
 
 void Enemy::setHP(int HP) {
     healthPoint = HP;
+}
+
+void Enemy::updateState() {
+    if (isDamaged) {
+        if (damageClock.getElapsedTime().asSeconds() > damageTime) {
+            sprite.setTexture(*normalTexture);
+            isDamaged = false;
+        }
+    }
 }
 

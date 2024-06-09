@@ -5,10 +5,10 @@
 #include "MiniMap.h"
 
 MiniMap::MiniMap() {
-    if(!mapIconTexture.loadFromFile("textures\\texture.png")){
+    if(!mapIconTexture.loadFromFile("textures\\minimap1.png")){
         return;
     }
-    if(!backgroundTexture.loadFromFile("textures\\blue.png")){
+    if(!backgroundTexture.loadFromFile("textures\\backMini.png")){
         return;
     }
     backgroundSprite.setTexture(backgroundTexture);
@@ -19,7 +19,7 @@ MiniMap::MiniMap() {
 MiniMap::MiniMap(int typeRoom,sf::Texture &texture, int x, int y, int sizeW, int sizeH) : sizeW(sizeW), sizeH(sizeH), typeRoom(typeRoom){
 
     mapIconSprite.setTexture(texture);
-    mapIconSprite.setTextureRect(sf::IntRect (0,0,sizeW,sizeH));
+//    mapIconSprite.setTextureRect(sf::IntRect (0,0,sizeW,sizeH));
     mapIconSprite.setPosition(x,y);
 
 }

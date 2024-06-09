@@ -22,6 +22,7 @@ private:
 
     sf::Sprite sprite;
     sf::Texture texture;
+    sf::Texture texture2;
 
     Bullet bullet;
     std::vector<Bullet> bulletVec;
